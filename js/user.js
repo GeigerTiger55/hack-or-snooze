@@ -22,7 +22,7 @@ async function login(evt) {
   currentUser = await User.login(username, password);
 
   $loginForm.trigger("reset");
-
+  
   saveUserCredentialsInLocalStorage();
   updateUIOnUserLogin();
 }
@@ -91,6 +91,7 @@ async function checkForRememberedUser() {
 function saveUserCredentialsInLocalStorage() {
   console.debug("saveUserCredentialsInLocalStorage");
   if (currentUser) {
+    console.log(currentUser.loginToken);
     localStorage.setItem("token", currentUser.loginToken);
     localStorage.setItem("username", currentUser.username);
   }
@@ -113,4 +114,6 @@ function updateUIOnUserLogin() {
   $allStoriesList.show();
 
   updateNavOnLogin();
+  $loginForm.hide();
+  $signupForm.hide();
 }
