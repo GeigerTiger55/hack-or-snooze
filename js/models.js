@@ -25,7 +25,10 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    let urlArray = this.url.split("//");
+    let urlArray2 = urlArray[1].split("/");
+    let hostName = urlArray2[0];
+    return hostName;
   }
 }
 
@@ -84,6 +87,7 @@ class StoryList {
     );
     
     const newStory = new Story(response.data.story);
+    console.log(response.data.story);
     const storyHTML = generateStoryMarkup(newStory);
     $allStoriesList.prepend(storyHTML);
     return newStory;
