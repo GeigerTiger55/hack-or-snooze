@@ -24,11 +24,9 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    let urlArray = this.url.split("//");
-    let urlArray2 = urlArray[1].split("/");
-    let hostName = urlArray2[0];
-    return hostName;
+    const newUrl = new URL(this.url);
+    const hostname = newUrl.hostname;
+    return hostname;
   }
 }
 
@@ -87,9 +85,12 @@ class StoryList {
     );
     
     const newStory = new Story(response.data.story);
-    console.log(response.data.story);
-    const storyHTML = generateStoryMarkup(newStory);
-    $allStoriesList.prepend(storyHTML);
+    //console.log(response.data.story);
+    /**TODO: put the html part in a separate function
+     * add story to stories attribute in storyList
+     * */
+    this.stories.unshift(newStory);
+
     return newStory;
   }
 }
@@ -209,4 +210,22 @@ class User {
       return null;
     }
   }
+
+  /**Adds story to users favorite list 
+   * 
+   * - Story instance
+  */
+
+  favoriteStory(story){
+    console.debug("favoriteStory");
+    this.favorites.push(story);
+  }
+
+  /**Removes story from users favorite list */
+  unfavoriteStory(story){
+    console.debug("unfavoriteStory");
+    const updatedFavoritesList = currentUser.favorites.filter(favStory => story.storyId !== favStory.storyId);
+    currentUser.favorites = updatedFavoritesList;
+  }
+
 }

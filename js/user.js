@@ -92,7 +92,6 @@ async function checkForRememberedUser() {
 function saveUserCredentialsInLocalStorage() {
   console.debug("saveUserCredentialsInLocalStorage");
   if (currentUser) {
-    console.log(currentUser.loginToken);
     localStorage.setItem("token", currentUser.loginToken);
     localStorage.setItem("username", currentUser.username);
   }
@@ -113,7 +112,7 @@ function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
 
   $allStoriesList.show();
-
+  $(".story-favorite").show();
   updateNavOnLogin();
   $loginForm.hide();
   $signupForm.hide();

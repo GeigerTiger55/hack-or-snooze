@@ -38,7 +38,7 @@ function updateNavOnLogin() {
   $navUserProfile.text(`${currentUser.username}`).show();
 }
 
-/**When user clicks on "submit", shows input form to add a new story */
+/**When user clicks on "submit" in nav bar, shows input form to add a new story */
 function navSubmitClick(evt){
   console.debug("navSubmitClick", evt);
   evt.preventDefault();
