@@ -23,9 +23,16 @@ function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
+  const checkForFav = currentUser.favorites.filter(favStory => story.storyId === favStory.storyId);
+  let favorite = false;
+  let starClass = "far"
+  if(checkForFav.length > 0){
+    favorite = true;
+    starClass = "fas";
+  }
   return $(`
-      <li id="${story.storyId}">
-        <i class="story-favorite far fa-star hidden"></i>
+      <li data-favorited="${favorite}" id="${story.storyId}">
+        <i class="story-favorite ${starClass} fa-star hidden"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -71,6 +78,7 @@ async function getInputsAndAddStory(evt) {
   //Clear form and hide
   $submitForm.trigger("reset");
   $submitForm.hide();
+  $(".story-favorite").show();
 }
 
 $submitForm.on("submit", getInputsAndAddStory);
@@ -81,4 +89,28 @@ function addNewStoryOnPage(newStory){
   const storyHTML = generateStoryMarkup(newStory);
   $allStoriesList.prepend(storyHTML);
 }
+
+
+/** handler for favorites */
+function handlerforFavorites(evt){
+  console.debug("handlerforFavorites");
+  evt.preventDefault();
+  const storyListItem = $(this).closet("li");
+/*
+  if (storyListItem.data("favorited")){
+    currentUser.unfavoriteStory(storyListItem.)
+  }*/
+  
+}
+
+$allStoriesList.on("click", ".story-favorite", handlerforFavorites);
+
+/*
+updateUIFunc
+$(this).toggleClass("far fas");
+
+
+updateFavoritesList
+//remove or add story to favorites
+//gets stories from stories list*/
 
