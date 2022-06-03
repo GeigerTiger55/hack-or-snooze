@@ -152,8 +152,10 @@ function updateUIFavorite($starIcon) {
  * remove or add story to favorites
  * 
  * get storyID from LI
- * use storyID to get the story instance from storyList
- * pass the storyInstance to the function
+ * use storyID to check if in the favorite list
+ *  if not in the favorite list, get the story instance from storyList and add to the favorite list
+ *  if in the favorite list, remove story from favoritesList
+ * 
  */
 
 
@@ -161,14 +163,27 @@ async function updateUserFavoriteList($starIcon) {
   console.debug("updateUserFavoriteList");
 
   const storyId = $starIcon.closest("li").attr("id");
-  const storyArray = storyList.stories.filter(favStory => storyId === favStory.storyId);
-  const story = storyArray[0];
+  const storyFavArray = currentUser.favorites.filter(favStory => storyId === favStory.storyId);
 
+  if (storyFavArray.length>0) {
+
+    let story = storyFavArray[0];
+    await currentUser.unfavoriteStory(story);
+
+  } else {
+
+    const storyListArray = storyList.stories.filter(favStory => storyId === favStory.storyId);
+    let story = storyListArray[0];
+    await currentUser.favoriteStory(story);
+
+  }
+/*
   //Check If solid
   if ($starIcon.hasClass("fas")) {
     await currentUser.favoriteStory(story);
   } else {
     await currentUser.unfavoriteStory(story);
   }
+  */
 }
 

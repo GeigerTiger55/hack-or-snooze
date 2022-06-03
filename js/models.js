@@ -231,16 +231,21 @@ class User {
    * - Story Instance
   */
   async unfavoriteStory(story) {
-    console.debug("unfavoriteStory");
-    const updatedFavoritesList = currentUser.favorites.filter(favStory => story.storyId !== favStory.storyId);
-    currentUser.favorites = updatedFavoritesList;
-    const response = await axios.delete(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
-      {
-        data: {
-          token: currentUser.loginToken,
+    console.debug("unfavoriteStory", story);
+    try{
+      const updatedFavoritesList = currentUser.favorites.filter(favStory => story.storyId !== favStory.storyId);
+      currentUser.favorites = updatedFavoritesList;
+      const response = await axios.delete(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+        {
+          data: {
+            token: currentUser.loginToken,
+          }
         }
-      }
-    );
+      );
+    } catch (err) {
+      console.error("removing story from favorites list failed", err);
+      return null;
+    }
   }
 
 }
