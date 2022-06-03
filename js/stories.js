@@ -20,7 +20,7 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  console.debug("generateStoryMarkup", story);
+  //console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
   const checkForFav = currentUser.favorites.filter(favStory => story.storyId === favStory.storyId);
@@ -92,16 +92,15 @@ function addNewStoryOnPage(newStory){
 
 
 /** handler for clicking on favorites icon */
-function handlerforFavorites(evt){
+async function handlerforFavorites(evt){
   console.debug("handlerforFavorites");
   evt.preventDefault();
 
   const $storyListItem = $(this).closest("li");
   //console.log('storyListItem - fav', storyListItem.data("favorited"));
 
-  console.log('this in handler for favs ', $(this));
   updateUIFavorite($(this));
-  updateUserFavoriteList($(this));
+  await updateUserFavoriteList($(this));
   
 }
 
@@ -131,20 +130,18 @@ function updateUIFavorite($starIcon){
  */
 
 
-function updateUserFavoriteList($starIcon){
+async function updateUserFavoriteList($starIcon){
   console.debug("updateUserFavoriteList");
 
-  const storyId = $starIcon.closest("li").id;
-  const storyArray = $allStoriesList.filter(favStory => storyId === favStory.storyId);
+  const storyId = $starIcon.closest("li").attr("id");
+  const storyArray = storyList.stories.filter(favStory => storyId === favStory.storyId);
   const story = storyArray[0];
-
-  console.log('story', story);
 
   //Check If solid
   if($starIcon.hasClass("fas")){
-    currentUser.favoriteStory(story);
+    await currentUser.favoriteStory(story);
   } else {
-    currentUser.unfavoriteStory(story);
+    await currentUser.unfavoriteStory(story);
   }
 }
 

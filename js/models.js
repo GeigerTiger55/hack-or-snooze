@@ -86,8 +86,7 @@ class StoryList {
     
     const newStory = new Story(response.data.story);
     //console.log(response.data.story);
-    /**TODO: put the html part in a separate function
-     * add story to stories attribute in storyList
+    /**
      * */
     this.stories.unshift(newStory);
 
@@ -216,19 +215,30 @@ class User {
    * - Story instance
   */
 
-  favoriteStory(story){
+  async favoriteStory(story){
     console.debug("favoriteStory");
     this.favorites.push(story);
+    const response = await axios.post(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`, 
+      {
+        token: currentUser.loginToken,
+      }
+    );
+
   }
 
   /**Removes story from users favorite list 
    * 
    * - Story Instance
   */
-  unfavoriteStory(story){
+  async unfavoriteStory(story){
     console.debug("unfavoriteStory");
     const updatedFavoritesList = currentUser.favorites.filter(favStory => story.storyId !== favStory.storyId);
     currentUser.favorites = updatedFavoritesList;
+    const response = await axios.delete(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`, 
+      {data: {
+        token: currentUser.loginToken,
+      }}
+    );
   }
 
 }

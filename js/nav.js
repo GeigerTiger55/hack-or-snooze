@@ -48,3 +48,5 @@ function navSubmitClick(evt){
 
 }
 $navSubmit.on("click", navSubmitClick);
+
+/** TODO: Add Favorites Nav-Tab */
