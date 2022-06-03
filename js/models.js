@@ -221,7 +221,10 @@ class User {
     this.favorites.push(story);
   }
 
-  /**Removes story from users favorite list */
+  /**Removes story from users favorite list 
+   * 
+   * - Story Instance
+  */
   unfavoriteStory(story){
     console.debug("unfavoriteStory");
     const updatedFavoritesList = currentUser.favorites.filter(favStory => story.storyId !== favStory.storyId);

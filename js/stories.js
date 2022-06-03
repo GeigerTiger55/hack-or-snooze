@@ -20,18 +20,18 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
+  console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
   const checkForFav = currentUser.favorites.filter(favStory => story.storyId === favStory.storyId);
-  let favorite = false;
   let starClass = "far"
+
   if(checkForFav.length > 0){
-    favorite = true;
     starClass = "fas";
   }
+
   return $(`
-      <li data-favorited="${favorite}" id="${story.storyId}">
+      <li id="${story.storyId}">
         <i class="story-favorite ${starClass} fa-star hidden"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -91,26 +91,60 @@ function addNewStoryOnPage(newStory){
 }
 
 
-/** handler for favorites */
+/** handler for clicking on favorites icon */
 function handlerforFavorites(evt){
   console.debug("handlerforFavorites");
   evt.preventDefault();
-  const storyListItem = $(this).closet("li");
-/*
-  if (storyListItem.data("favorited")){
-    currentUser.unfavoriteStory(storyListItem.)
-  }*/
+
+  const $storyListItem = $(this).closest("li");
+  //console.log('storyListItem - fav', storyListItem.data("favorited"));
+
+  console.log('this in handler for favs ', $(this));
+  updateUIFavorite($(this));
+  updateUserFavoriteList($(this));
   
 }
 
 $allStoriesList.on("click", ".story-favorite", handlerforFavorites);
 
-/*
-updateUIFunc
-$(this).toggleClass("far fas");
+/**Update UI display and data to reflect that the story has been unfavorited 
+ * or favorited
+ * 
+ * - starIcon is star on LI to toggle
+ * - storyFav is if the story is currently a favorite or not * 
+ * 
+ */
+function updateUIFavorite($starIcon){
+  console.debug("updateUIFavorites");
+  //Toggle star color
+  $starIcon.toggleClass("far fas");
+}
 
 
-updateFavoritesList
-//remove or add story to favorites
-//gets stories from stories list*/
+/**
+ * updateFavoritesList
+ * remove or add story to favorites
+ * 
+ * get storyID from LI
+ * use storyID to get the story instance from storyList
+ * pass the storyInstance to the function
+ */
+
+
+function updateUserFavoriteList($starIcon){
+  console.debug("updateUserFavoriteList");
+
+  const storyId = $starIcon.closest("li").id;
+  const storyArray = $allStoriesList.filter(favStory => storyId === favStory.storyId);
+  const story = storyArray[0];
+
+  console.log('story', story);
+
+  //Check If solid
+  if($starIcon.hasClass("fas")){
+    currentUser.favoriteStory(story);
+  } else {
+    currentUser.unfavoriteStory(story);
+  }
+}
 
