@@ -89,22 +89,30 @@ function putFavoriteStoriesOnPage() {
 async function getInputsAndAddStory(evt) {
   console.debug("getInputsAndAddStory");
   evt.preventDefault();
-  const author = $("#author-input").val();
-  const title = $("#title-input").val();
-  const url = $("#url-input").val();
-  const storyInfo = {
-    author,
-    title,
-    url,
-  };
+    const author = $("#author-input").val();
+    const title = $("#title-input").val();
+    const url = $("#url-input").val();
+    try{
+      const tryUrl = new URL (url);
+    } catch (err){
+      alert("URL NOT VALID! Please enter a valid URL!");
+      return null;
+    }
+    
+    const storyInfo = {
+      author,
+      title,
+      url,
+    };
 
-  const newStory = await storyList.addStory(currentUser, storyInfo);
-  addNewStoryOnPage(newStory);
+    const newStory = await storyList.addStory(currentUser, storyInfo);
+    addNewStoryOnPage(newStory);
 
-  //Clear form and hide
-  $submitForm.trigger("reset");
-  $submitForm.hide();
-  $(".story-favorite").show();
+    //Clear form and hide
+    $submitForm.trigger("reset");
+    $submitForm.hide();
+    $(".story-favorite").show();
+
 }
 
 $submitForm.on("submit", getInputsAndAddStory);
@@ -165,7 +173,7 @@ async function updateUserFavoriteList($starIcon) {
   const storyId = $starIcon.closest("li").attr("id");
   const storyFavArray = currentUser.favorites.filter(favStory => storyId === favStory.storyId);
 
-  if (storyFavArray.length>0) {
+  if (storyFavArray.length > 0) {
 
     let story = storyFavArray[0];
     await currentUser.unfavoriteStory(story);
@@ -177,13 +185,13 @@ async function updateUserFavoriteList($starIcon) {
     await currentUser.favoriteStory(story);
 
   }
-/*
-  //Check If solid
-  if ($starIcon.hasClass("fas")) {
-    await currentUser.favoriteStory(story);
-  } else {
-    await currentUser.unfavoriteStory(story);
-  }
-  */
+  /*
+    //Check If solid
+    if ($starIcon.hasClass("fas")) {
+      await currentUser.favoriteStory(story);
+    } else {
+      await currentUser.unfavoriteStory(story);
+    }
+    */
 }
 
