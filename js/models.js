@@ -217,12 +217,12 @@ class User {
 
   async favoriteStory(story) {
     console.debug("favoriteStory");
-    this.favorites.push(story);
-    const response = await axios.post(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
-      {
-        token: currentUser.loginToken,
-      }
+    const response = await axios.post(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+    {
+      token: this.loginToken,
+    }
     );
+    this.favorites.push(story);
 
   }
 
@@ -233,15 +233,15 @@ class User {
   async unfavoriteStory(story) {
     console.debug("unfavoriteStory", story);
     try{
-      const updatedFavoritesList = currentUser.favorites.filter(favStory => story.storyId !== favStory.storyId);
-      currentUser.favorites = updatedFavoritesList;
-      const response = await axios.delete(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
-        {
-          data: {
-            token: currentUser.loginToken,
-          }
+      const response = await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      {
+        data: {
+          token: this.loginToken,
         }
+      }
       );
+      const updatedFavoritesList = this.favorites.filter(favStory => story.storyId !== favStory.storyId);
+      this.favorites = updatedFavoritesList;
     } catch (err) {
       console.error("removing story from favorites list failed", err);
       return null;

@@ -130,11 +130,8 @@ async function handlerforFavorites(evt) {
   console.debug("handlerforFavorites");
   evt.preventDefault();
 
-  const $storyListItem = $(this).closest("li");
-  //console.log('storyListItem - fav', storyListItem.data("favorited"));
-
-  updateUIFavorite($(this));
   await updateUserFavoriteList($(this));
+  updateUIFavorite($(this));
 
 }
 
@@ -171,27 +168,17 @@ async function updateUserFavoriteList($starIcon) {
   console.debug("updateUserFavoriteList");
 
   const storyId = $starIcon.closest("li").attr("id");
-  const storyFavArray = currentUser.favorites.filter(favStory => storyId === favStory.storyId);
+  let story = currentUser.favorites.find(favStory => storyId === favStory.storyId);
 
-  if (storyFavArray.length > 0) {
+  if (story instanceof Story) {
 
-    let story = storyFavArray[0];
     await currentUser.unfavoriteStory(story);
 
   } else {
 
-    const storyListArray = storyList.stories.filter(favStory => storyId === favStory.storyId);
-    let story = storyListArray[0];
+    story = storyList.stories.find(favStory => storyId === favStory.storyId);
     await currentUser.favoriteStory(story);
 
   }
-  /*
-    //Check If solid
-    if ($starIcon.hasClass("fas")) {
-      await currentUser.favoriteStory(story);
-    } else {
-      await currentUser.unfavoriteStory(story);
-    }
-    */
 }
 
