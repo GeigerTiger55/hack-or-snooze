@@ -25,8 +25,9 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   let favHidden = '';
   let starClass = 'far';
-
-  if (currentUser !== null) {
+  //console.log("currentUser", currentUser);
+  //console.log("currentUser.username", currentUser.username);
+  if (currentUser !== undefined) {
     //Check if story is in favorites array and make star filled in if it is
     const checkForFav = currentUser.favorites.filter(favStory => story.storyId === favStory.storyId);
 
