@@ -34,12 +34,13 @@ function updateNavOnLogin() {
   $(".main-nav-links").show();
   $navLogin.hide();
   $navSubmit.show();
+  $navFav.show();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
 
 /**When user clicks on "submit" in nav bar, shows input form to add a new story */
-function navSubmitClick(evt){
+function navSubmitClick(evt) {
   console.debug("navSubmitClick", evt);
   evt.preventDefault();
   hidePageComponents();
@@ -49,4 +50,12 @@ function navSubmitClick(evt){
 }
 $navSubmit.on("click", navSubmitClick);
 
-/** TODO: Add Favorites Nav-Tab */
+/**When user clicks on "submit" in nav bar, shows input form to add a new story */
+function navFavClick(evt) {
+  console.debug("navFavClick", evt);
+  evt.preventDefault();
+  hidePageComponents();
+  putFavoriteStoriesOnPage();
+
+}
+$navFav.on("click", navFavClick);

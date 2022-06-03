@@ -22,7 +22,7 @@ async function login(evt) {
   currentUser = await User.login(username, password);
 
   $loginForm.trigger("reset");
-  
+
   saveUserCredentialsInLocalStorage();
   updateUIOnUserLogin();
 }
@@ -61,6 +61,7 @@ function logout(evt) {
   localStorage.clear();
   location.reload();
   $navSubmit.hide();
+  $navFav.hide();
 }
 
 $navLogOut.on("click", logout);

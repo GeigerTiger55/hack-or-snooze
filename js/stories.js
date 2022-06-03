@@ -23,16 +23,24 @@ function generateStoryMarkup(story) {
   //console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
-  const checkForFav = currentUser.favorites.filter(favStory => story.storyId === favStory.storyId);
-  let starClass = "far"
+  let favHidden = '';
+  let starClass = 'far';
 
-  if(checkForFav.length > 0){
-    starClass = "fas";
+  if (currentUser !== null) {
+    //Check if story is in favorites array and make star filled in if it is
+    const checkForFav = currentUser.favorites.filter(favStory => story.storyId === favStory.storyId);
+
+    if (checkForFav.length > 0) {
+      starClass = "fas";
+    }
+
+  } else {
+    favHidden = 'hidden';
   }
 
   return $(`
       <li id="${story.storyId}">
-        <i class="story-favorite ${starClass} fa-star hidden"></i>
+        <i class="story-favorite ${starClass} fa-star ${favHidden}"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -57,6 +65,23 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
+}
+
+/** Uses currentUsers favorite stories array to generate HTML of favorie stories
+ * list, and puts on page. */
+
+function putFavoriteStoriesOnPage() {
+  console.debug("putFavoriteStoriesOnPage");
+
+  $favoriteStoriesList.empty();
+
+  // loop through all of our stories and generate HTML for them
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $favoriteStoriesList.append($story);
+  }
+
+  $favoriteStoriesList.show();
 }
 
 /**When user submits the form, add story to the stories list */
@@ -84,7 +109,7 @@ async function getInputsAndAddStory(evt) {
 $submitForm.on("submit", getInputsAndAddStory);
 
 /**Add new story submitted by user to page */
-function addNewStoryOnPage(newStory){
+function addNewStoryOnPage(newStory) {
   console.debug("addNewStoryOnPage");
   const storyHTML = generateStoryMarkup(newStory);
   $allStoriesList.prepend(storyHTML);
@@ -92,7 +117,7 @@ function addNewStoryOnPage(newStory){
 
 
 /** handler for clicking on favorites icon */
-async function handlerforFavorites(evt){
+async function handlerforFavorites(evt) {
   console.debug("handlerforFavorites");
   evt.preventDefault();
 
@@ -101,10 +126,11 @@ async function handlerforFavorites(evt){
 
   updateUIFavorite($(this));
   await updateUserFavoriteList($(this));
-  
+
 }
 
 $allStoriesList.on("click", ".story-favorite", handlerforFavorites);
+$favoriteStoriesList.on("click", ".story-favorite", handlerforFavorites);
 
 /**Update UI display and data to reflect that the story has been unfavorited 
  * or favorited
@@ -113,7 +139,7 @@ $allStoriesList.on("click", ".story-favorite", handlerforFavorites);
  * - storyFav is if the story is currently a favorite or not * 
  * 
  */
-function updateUIFavorite($starIcon){
+function updateUIFavorite($starIcon) {
   console.debug("updateUIFavorites");
   //Toggle star color
   $starIcon.toggleClass("far fas");
@@ -130,7 +156,7 @@ function updateUIFavorite($starIcon){
  */
 
 
-async function updateUserFavoriteList($starIcon){
+async function updateUserFavoriteList($starIcon) {
   console.debug("updateUserFavoriteList");
 
   const storyId = $starIcon.closest("li").attr("id");
@@ -138,7 +164,7 @@ async function updateUserFavoriteList($starIcon){
   const story = storyArray[0];
 
   //Check If solid
-  if($starIcon.hasClass("fas")){
+  if ($starIcon.hasClass("fas")) {
     await currentUser.favoriteStory(story);
   } else {
     await currentUser.unfavoriteStory(story);

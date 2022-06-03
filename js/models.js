@@ -77,13 +77,13 @@ class StoryList {
   async addStory(user, storyInfo) {
     console.debug('addStory method');
 
-    const response = await axios.post(`${BASE_URL}/stories`, 
+    const response = await axios.post(`${BASE_URL}/stories`,
       {
         token: user.loginToken,
         story: storyInfo,
       }
     );
-    
+
     const newStory = new Story(response.data.story);
     //console.log(response.data.story);
     /**
@@ -106,13 +106,13 @@ class User {
    */
 
   constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+    username,
+    name,
+    createdAt,
+    favorites = [],
+    ownStories = []
+  },
+    token) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
@@ -215,10 +215,10 @@ class User {
    * - Story instance
   */
 
-  async favoriteStory(story){
+  async favoriteStory(story) {
     console.debug("favoriteStory");
     this.favorites.push(story);
-    const response = await axios.post(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`, 
+    const response = await axios.post(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
       {
         token: currentUser.loginToken,
       }
@@ -230,14 +230,16 @@ class User {
    * 
    * - Story Instance
   */
-  async unfavoriteStory(story){
+  async unfavoriteStory(story) {
     console.debug("unfavoriteStory");
     const updatedFavoritesList = currentUser.favorites.filter(favStory => story.storyId !== favStory.storyId);
     currentUser.favorites = updatedFavoritesList;
-    const response = await axios.delete(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`, 
-      {data: {
-        token: currentUser.loginToken,
-      }}
+    const response = await axios.delete(`${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+      {
+        data: {
+          token: currentUser.loginToken,
+        }
+      }
     );
   }
 
